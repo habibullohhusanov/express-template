@@ -1,0 +1,21 @@
+{
+  "name": "express-shablon",
+  "version": "1.0.0",
+  "description": "db-mongo, without dotenv, api",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --env-file env index.js",
+    "dev": "nodemon --env-file env index.js"
+  },
+  "author": "Habibulloh",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}
