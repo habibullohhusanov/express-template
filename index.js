@@ -15,6 +15,13 @@ app.use(express.json());
 
 // routes
 app.use('/auth', authRoute);
+app.use('/', (req, res) => {
+    res.status(200).json({
+        "success": true,
+        "data": [],
+        "message": "the template has been run successfully"
+    });
+});
 
 // end
 app.listen(PORT, () => {

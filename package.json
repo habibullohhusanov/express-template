@@ -1,6 +1,6 @@
 {
-  "name": "express-shablon",
-  "version": "1.0.0",
+  "name": "express-template",
+  "version": "1.0.1",
   "description": "db-mongo, without dotenv, api",
   "main": "index.js",
   "scripts": {
