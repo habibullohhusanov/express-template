@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/userModel.js"
+import User from "../models/userModel.js";
 
 const authMiddleware = async (req, res, next) => {
     try {
@@ -9,31 +9,29 @@ const authMiddleware = async (req, res, next) => {
             return res.status(401).json({
                 status: false,
                 data: [],
-                message: `Not authorized`,
+                message: "Not authorized."
             });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_TOKEN);
-        const user = await User.findOne({ _id: decoded.userId });
+        const decoded = jwt.decode(token, process.env.JWT_TOKEN);
+        const user = await User.findById(decoded.userId);
 
         if (!user) {
             return res.status(401).json({
                 status: false,
                 data: [],
-                message: `Not authorized. Invalid token.`,
+                message: "Invalid token."
             });
         }
-
         req.token = token;
         req.user = user;
         next();
     } catch (error) {
-        return res.status(401).json({
+        res.status(401).json({
             status: false,
             data: [],
-            message: `Not authorized. Invalid token.`,
-        });
+            message: "Not authorized or invalid token."
+        })
     }
-};
-
+}
 export default authMiddleware;

@@ -1,21 +1,23 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
+
+const MONGO_URL = process.env.MONGO_URL;
 
 const connect = () => {
-  try {
-    mongoose.connect(process.env.MONGO_URL)
-  } catch (error) {
-    console.log(error)
-  }
+    try {
+        mongoose.connect(MONGO_URL);
+    } catch (error) {
+        console.log(error);
+    }
 }
 
-const db = mongoose.connection
+const db = mongoose.connection;
 
-db.once('open', () => {
-  console.log('Connected to MongoDB')
-})
+db.once("open", () => {
+    console.log("Connected to MongoDB");
+});
 
-db.on('error', (err) => {
-  console.error('MongoDB connection error:', err)
-})
+db.on("error", (error) => {
+    console.error(error);
+});
 
-export default connect
+export default connect;

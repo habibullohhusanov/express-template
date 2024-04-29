@@ -1,4 +1,4 @@
-import User from "../models/userModel.js";
+import User from "../app/models/userModel.js";
 
 const userSeeder = async () => {
     try {
@@ -6,11 +6,13 @@ const userSeeder = async () => {
         var user = new User({
             name: "Admin",
             email: "admin@gmail.com",
-            password: "2407"
+            password: "2407",
+            isAdmin: true
         });
+        user.userVerify();
         await user.save();
     } catch (error) {
-        console.error('User seeder don\'t work:', error);
+        console.error("User seeder don\'t work:", error);
     }
 }
 
