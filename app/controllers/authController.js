@@ -1,7 +1,8 @@
-import { loginRequest, registerRequest } from "../requests/authRequest.js";
-import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+import User from "../models/userModel.js";
 import UserResource from "../resources/userResource.js";
+import { loginRequest, registerRequest } from "../requests/authRequest.js";
+import { created, requestError, serverError, succes, unauthorized } from "../../uitls/response.js";
 
 export const login = async (req, res) => {
     try {
@@ -9,21 +10,11 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
         const { error } = loginRequest.validate(loginData);
         if (error) {
-            return res.status(400).json({
-                tatus: false,
-                data: [],
-                token: null,
-                message: error.message
-            });
+            return requestError(res, error.message, true);
         } else {
             const user = await User.findOne({ email });
             if (!user) {
-                return res.status(401).json({
-                    status: false,
-                    data: [],
-                    token: null,
-                    message: "Data incorrect"
-                });
+                return unauthorized(res, "Data incorrect", true);
             }
             const isCheck = user.checkPassword(password);
             if (isCheck) {
@@ -31,27 +22,12 @@ export const login = async (req, res) => {
                     expiresIn: "2d"
                 });
                 const data = new UserResource(user);
-                return res.status(200).json({
-                    status: true,
-                    data: data,
-                    token: token,
-                    message: "Account logged in"
-                });
+                return succes(res, data, "Account logged in", token);
             }
-            return res.status(401).json({
-                status: false,
-                data: [],
-                token: null,
-                message: "Data incorrect"
-            });
+            return unauthorized(res, "Data incorrect", true);
         }
     } catch (error) {
-        return res.status(500).json({
-            status: false,
-            data: [],
-            token: null,
-            message: error.message
-        });
+        return serverError(res, error.message, false, true);
     }
 }
 export const register = async (req, res) => {
@@ -60,21 +36,11 @@ export const register = async (req, res) => {
         const { name, email, password } = req.body;
         const { error } = registerRequest.validate(registerData);
         if (error) {
-            return res.status(400).json({
-                status: false,
-                data: [],
-                token: null,
-                message: error.message
-            });
+            return requestError(res, error.message, true);
         } else {
             let user = await User.findOne({ email });
             if (user) {
-                return res.status(500).json({
-                    status: false,
-                    data: [],
-                    token: null,
-                    message: `${email} alredy exsist`
-                });
+                return requestError(res, `${email} alredy exsist`, true);
             }
             const newUser = new User({
                 name, email, password
@@ -84,20 +50,10 @@ export const register = async (req, res) => {
                 expiresIn: "2d"
             });
             const data = new UserResource(user);
-            return res.status(201).json({
-                status: true,
-                date: data,
-                token: token,
-                message: "Created"
-            });
+            return created(res, data, "Created", token);
         }
     } catch (error) {
-        return res.status(500).json({
-            status: false,
-            data: [],
-            token: null,
-            message: error.message
-        });
+        return serverError(res, error.message, false, true);
     }
 }
 export const logout = async (req, res) => {
@@ -106,17 +62,9 @@ export const logout = async (req, res) => {
 export const user = async (req, res) => {
     try {
         const data = new UserResource(req.user);
-        return res.status(200).json({
-            status: true,
-            data: data,
-            message: "User"
-        });
+        return succes(res, data, "User data");
     } catch (error) {
-        return res.status(500).json({
-            status: false,
-            data: [],
-            message: error.message
-        });
+        return serverError(res, error.message);
     }
 }
 export const verify = async (req, res) => {
@@ -124,16 +72,8 @@ export const verify = async (req, res) => {
         const user = await User.findById(req.user._id);
         user.userVerify();
         const data = new UserResource(user);
-        return res.status(200).json({
-            status: true,
-            data: data,
-            message: "User"
-        });
+        return succes(res, data, "User data");
     } catch (error) {
-        return res.status(500).json({
-            status: false,
-            data: [],
-            message: error.message
-        });
+        return serverError(res, error.message);
     }
 }

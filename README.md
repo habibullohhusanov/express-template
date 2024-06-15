@@ -61,6 +61,8 @@ express-template
 ├── seeders
 │   ├── index.js
 │   └── userSeeder.js
+├── uilts
+│   └── response.js
 ├── .env.example
 ├── .gitignore
 ├── index.js
