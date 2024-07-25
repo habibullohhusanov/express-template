@@ -1,4 +1,4 @@
-# Express template
+# Express template 2.3.0
 
 ## Use
 
@@ -18,6 +18,33 @@ npm install
 npm run seed
 ```
 
+Code : *userSeeder.js*
+```
+const userSeeder = async () => {
+    try {
+        await User.deleteMany({});
+        var user = new User({
+            name: "Super Admin",
+            username: "superadmin",
+            role: "superAdmin",
+            email: "superadmin@gmail.com",
+            password: "1234",
+        });
+        await user.save();
+        var user = new User({
+            name: "Admin",
+            username: "admin",
+            role: "admin",
+            email: "admin@gmail.com",
+            password: "1234",
+        });
+        await user.save();
+    } catch (error) {
+        console.error("User seeder don\'t work:", error);
+    }
+}
+```
+
 ### 5. Run developer mode
 ```
 npm run dev
@@ -28,12 +55,12 @@ npm run dev
 
 
 ## Packages
-+ bcryptjs         2.4.3
-+ express         4.19.2
-+ joi         17.12.3
-+ jsonwebtoken         9.0.2
-+ mongoose         8.3.2
-+ nodemon         3.1.0
++ bcryptjs - 2.4.3
++ express - 4.19.2
++ joi - 17.13.3
++ jsonwebtoken - 9.0.2
++ mongoose - 8.5.1
++ nodemon - 3.1.4
 
 
 ## File structure

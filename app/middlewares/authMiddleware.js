@@ -1,37 +1,29 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
+import { serverError, unauthorized } from "../../uitls/response.js";
 
 const authMiddleware = async (req, res, next) => {
     try {
-        const token = req.header("Authorization").replace("Bearer ", "");
-
+        const token = req.header("Authorization");
         if (!token) {
-            return res.status(401).json({
-                status: false,
-                data: [],
-                message: "Not authorized."
-            });
+            return unauthorized(res, "Not authorized.");
         }
+        const replacedToken = token.replace("Bearer ", "");
 
-        const decoded = jwt.decode(token, process.env.JWT_TOKEN);
+        const decoded = jwt.decode(replacedToken, process.env.JWT_SECRET);
+        if (!decoded.userId) {
+            return unauthorized(res, "Invalid token")
+        }
         const user = await User.findById(decoded.userId);
 
         if (!user) {
-            return res.status(401).json({
-                status: false,
-                data: [],
-                message: "Invalid token."
-            });
+            return unauthorized(res, "Invalid token")
         }
-        req.token = token;
+        req.token = replacedToken;
         req.user = user;
         next();
     } catch (error) {
-        res.status(401).json({
-            status: false,
-            data: [],
-            message: "Not authorized or invalid token."
-        })
+        return serverError(res, error.message);
     }
 }
 export default authMiddleware;

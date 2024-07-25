@@ -11,7 +11,7 @@ export const login = async (req, res) => {
         const { error } = loginRequest.validate(loginData);
         if (error) {
             return requestError(res, error.message, true);
-        } else {
+        }
             const user = await User.findOne({ email });
             if (!user) {
                 return unauthorized(res, "Data incorrect", true);
@@ -25,7 +25,6 @@ export const login = async (req, res) => {
                 return succes(res, data, "Account logged in", token);
             }
             return unauthorized(res, "Data incorrect", true);
-        }
     } catch (error) {
         return serverError(res, error.message, false, true);
     }
@@ -37,7 +36,7 @@ export const register = async (req, res) => {
         const { error } = registerRequest.validate(registerData);
         if (error) {
             return requestError(res, error.message, true);
-        } else {
+        }
             let user = await User.findOne({ email });
             if (user) {
                 return requestError(res, `${email} alredy exsist`, true);
@@ -51,14 +50,13 @@ export const register = async (req, res) => {
             });
             const data = new UserResource(user);
             return created(res, data, "Created", token);
-        }
     } catch (error) {
         return serverError(res, error.message, false, true);
     }
 }
-export const logout = async (req, res) => {
+// export const logout = async (req, res) => {
 
-}
+// }
 export const user = async (req, res) => {
     try {
         const data = new UserResource(req.user);

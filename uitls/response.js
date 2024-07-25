@@ -15,7 +15,7 @@ export const created = (res, data, message = "Created", token = false) => {
 }
 export const succes = (res, data, message = "Successfuly", token = false) => {
     if (token) {
-        return res.status(201).json({
+        return res.status(200).json({
             status: true,
             data,
             token,
